@@ -1,0 +1,34 @@
+{
+    "name": "RB3201-RBProtocol", 
+    "keywords": [
+        "esp32", 
+        "rbprotocol", 
+        "rb3201", 
+        "robotarna", 
+        "robotikabrno", 
+        "roboticsbrno"
+    ], 
+    "description": "Library implementing the RBController protocol by RoboticsBrno.", 
+    "license": "MIT", 
+    "repository": {
+        "type": "git", 
+        "url": "https://github.com/RoboticsBrno/RB3201-RBProtocol-library.git"
+    }, 
+    "authors": [
+        {
+            "email": "vbocek@gmail.com", 
+            "url": null, 
+            "maintainer": true, 
+            "name": "Vojtech Bocek"
+        }
+    ], 
+    "version": "4.0.2", 
+    "frameworks": [
+        "espidf", 
+        "arduino"
+    ], 
+    "platforms": [
+        "espressif32"
+    ], 
+    "id": 5534
+}
