@@ -4,6 +4,10 @@
 
 #include "Arduino.h"
 
+// Print with stream operator
+template<class T> inline Print& operator <<(Print &obj,     T arg) { obj.print(arg);    return obj; }
+template<>        inline Print& operator <<(Print &obj, float arg) { obj.print(arg, 4); return obj; }
+
 class ODriveArduino {
 public:
     enum AxisState {
@@ -79,6 +83,12 @@ public:
     float getPos( int axis );
 
     void move( int axis, float pos );
+
+    template < typename T >
+    void setProperty(String property, T val) {
+        serial_ << "w " << property << " " << val << "\n";
+        clearBuffer();
+    }
 
     static String errorText( int error, int motor, int encoder );
 private:

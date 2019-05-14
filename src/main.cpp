@@ -11,6 +11,8 @@
 // #include <HardwareSerial.h>
 #include <ODriveArduino.h>
 
+void configureOdrive( ODriveArduino& odrive );
+
 #define OTOCNY_MOTOR  rb::MotorId::M1 // motor pro otaceni servoruky
 HardwareSerial odriveSerial(1);
 ODriveArduino odrive(odriveSerial);
@@ -34,6 +36,7 @@ void setup() {
     odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
 
     Serial.println( "Setup" );
+    // configureOdrive( odrive );
     odrive.initializeMotors( true );
     if ( odrive.error() ) {
         odrive.dumpErrors();
@@ -45,20 +48,23 @@ void setup() {
         }
     }
     Serial.println( "Done" );
-
+    Serial.println( "Turning on" );
     odrive.turnOn();
     if ( odrive.error() ) {
         odrive.dumpErrors();
     }
+    Serial.println( "Turned on" );
     delay( 500 );
 
     while ( true ) {
         odrive.move( 0, 0 );
-        odrive.move( 1, 5 * 2400 );
+        odrive.move( 1, 10 * 5 * 2400 );
         delay( 4000 );
-        odrive.move( 0, 5 * 2400 );
+        odrive.move( 0, 10 * 5 * 2400 );
         odrive.move( 1, 0 );
         delay( 4000 );
+        if ( odrive.error() )
+            odrive.dumpErrors();
     }
     odrive.turnOff();
     Serial.println( "Turned off" );

@@ -12,10 +12,6 @@ static const int kMotorStrideBool = 4;
 static const int kMotorOffsetUint16 = 0;
 static const int kMotorStrideUint16 = 2;
 
-// Print with stream operator
-template<class T> inline Print& operator <<(Print &obj,     T arg) { obj.print(arg);    return obj; }
-template<>        inline Print& operator <<(Print &obj, float arg) { obj.print(arg, 4); return obj; }
-
 bool strToFloat( const String& str, float& res ) {
     char *end;
     res = strtod( str.c_str(), &end );
@@ -105,6 +101,8 @@ void ODriveArduino::initializeMotors( bool full ) {
             setState( axis, AxisState::ENCODER_OFFSET_CALIBRATION );
     }
     while ( getState( 0 ) != AxisState::IDLE || getState( 1 ) != AxisState::IDLE ) {
+        if (error(0) || error(1))
+            dumpErrors();
         delay( 1 );
     }
 }
@@ -126,6 +124,7 @@ void ODriveArduino::clearBuffer() {
 
 void ODriveArduino::setState( int axis, ODriveArduino::AxisState state ) {
     assert( axis == 0 || axis == 1 );
+    clearBuffer();
     serial_ << "w axis" << axis << ".requested_state " << state << "\n";
 }
 
@@ -250,5 +249,4 @@ float ODriveArduino::getPos( int axis ) {
 void ODriveArduino::move( int axis, float pos ) {
     assert( axis == 0 || axis == 1 );
     serial_ << "t " << axis << " " << pos << "\n";
-    String response = readLine( timeout_ );
 }
