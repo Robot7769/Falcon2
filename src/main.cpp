@@ -33,6 +33,7 @@ int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 5 * 2400 ; // převodovka 1:5,  2400 tiků enkodéru na otáčku motoru
+long max_speed = 20000; // pocet tiku za sekundu 
 int8_t axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
 byte btn_last[8] = {0,0,0,0,0,0,0,0};
@@ -55,7 +56,13 @@ void setup() {
         SerialBT.println("!!! Bluetooth work!");
         Serial.println("!!! Bluetooth work!");
     }
- 
+
+    Serial.print ("Starting...\n");
+    rbc();
+    Serial.print ("RBC initialized1\n");
+    auto& batt = rbc().battery();
+    batt.setCoef(9.0); 
+
     odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
     Serial.println( "Setup odrive begin" );
     
@@ -80,11 +87,11 @@ void setup() {
 
     while ( true ) {
           
-        odrive.move( 0, 0, 20000 );
-        odrive.move( 1, 10 * 5 * 2400, 20000 ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
+        odrive.move( 0, 0, max_speed );
+        odrive.move( 1, 10 * otocka_kola, max_speed ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
         delay( 4000 );
-        odrive.move( 0, 10 * 5 * 2400, 20000 );
-        odrive.move( 1, 0, 20000 );
+        odrive.move( 0, 10 * otocka_kola, max_speed );
+        odrive.move( 1, 0, max_speed );
         delay( 4000 );
         if ( odrive.error() )
             odrive.dumpErrors();
@@ -95,7 +102,7 @@ void setup() {
     while( true ) {
         delay( 500 );
         Serial.print( "Pos: " );
-        Serial.println( odrive.getPos( 0 ) );
+        Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0 
     }
 
 
@@ -113,7 +120,7 @@ void setup() {
 }
 
 void testovaci(); // dole pod main
-void read_joystick();
+void read_joystick(); // dole pod main
 
 void loop() {
     if (send_data) {
