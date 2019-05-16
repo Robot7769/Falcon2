@@ -36,7 +36,7 @@ public:
         CONTROLLER_FAILED = 0x200,
         POS_CTRL_DURING_SENSORLESS = 0x400,
         WATCHDOG_TIMER_EXPIRED = 0x800,
-        READOUT = 0x1600
+        READOUT = 0x1000
     };
 
     enum EncoderError {
@@ -60,7 +60,7 @@ public:
         BRAKE_DEADTIME_VIOLATION = 0x0100,
         UNEXPECTED_TIMER_CALLBACK = 0x0200,
         CURRENT_SENSE_SATURATION = 0x0400,
-        INVERTER_OVER_TEMP = 0x0800
+        INVERTER_OVER_TEMP = 0x0800,
     };
 
 

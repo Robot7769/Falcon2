@@ -53,6 +53,7 @@ String encoderErrorStr( int err ) {
         case ODriveArduino::UNSUPPORTED_ENCODER_MODE: return "UNSUPPORTED_ENCODER_MODE";
         case ODriveArduino::ILLEGAL_HALL_STATE: return "ILLEGAL_HALL_STATE";
         case ODriveArduino::INDEX_NOT_FOUND_YET: return "INDEX_NOT_FOUND_YET";
+        case ODriveArduino::READOUT: return "READOUT";
     }
     return "";
 }
@@ -72,6 +73,7 @@ String motorErrorStr( int err ) {
         case ODriveArduino::UNEXPECTED_TIMER_CALLBACK: return "UNEXPECTED_TIMER_CALLBACK";
         case ODriveArduino::CURRENT_SENSE_SATURATION: return "CURRENT_SENSE_SATURATION";
         case ODriveArduino::INVERTER_OVER_TEMP: return "INVERTER_OVER_TEMP";
+        case ODriveArduino::READOUT: return "READOUT";
     }
     return "";
 }
