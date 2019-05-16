@@ -32,6 +32,7 @@ int position_servo3 = 120;
 int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
+int otocka_kola = 5 * 2400 ; // převodovka 1:5,  2400 tiků enkodéru na otáčku motoru
 int8_t axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
 byte btn_last[8] = {0,0,0,0,0,0,0,0};
@@ -54,50 +55,23 @@ void setup() {
         SerialBT.println("!!! Bluetooth work!");
         Serial.println("!!! Bluetooth work!");
     }
-    // odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
-
-    // delay(2000);
-    // Serial.println("Starting");
-    // odrive.run_state(0, ODriveArduino::AXIS_STATE_FULL_CALIBRATION_SEQUENCE, true);
-    // if (!odrive.run_state(1, ODriveArduino::AXIS_STATE_FULL_CALIBRATION_SEQUENCE, true))
-    //     Serial.println("Calibration sequence failed");
-    // odrive.run_state(0, ODriveArduino::AXIS_STATE_CLOSED_LOOP_CONTROL, true);
-    // if (!odrive.run_state(1, ODriveArduino::AXIS_STATE_CLOSED_LOOP_CONTROL, true))
-    //     Serial.println("Failed to set closed loop reulation");
-
-    // Serial.println("Calibration done");
-    // delay(2000);
-
-    // Serial.println("Going up");
-    // for (int i = 0; i != 10000; i += 1) {
-    //     odrive.SetPosition(0, i);
-    //     odrive.SetPosition(1, i);
-    //     delay(1);
-    // }
-    // Serial.println("Going down");
-    // for (int i = 10000; i != 0; i -= 1) {
-    //     odrive.SetPosition(0, i);
-    //     odrive.SetPosition(1, i);
-    //     delay(1);
-    // }
-    // Serial.println("Stop");
+ 
     odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
-
-    Serial.println( "Setup" );
-    // configureOdrive( odrive );
-    odrive.initializeMotors( true );
-    if ( odrive.error() ) {
-        odrive.dumpErrors();
+    Serial.println( "Setup odrive begin" );
+    
+    odrive.initializeMotors( false );  // true - plná kalibrace,  false - kalibrace bez počátečního pískání 
+    if ( odrive.error() ) {             // zjistí, jestli je chyba
+        odrive.dumpErrors();           // vypíše chybu 
         while ( true ) {
             Serial.println( "Plese fix it!" );
             Serial.print("Voltage: ");
-            Serial.println(odrive.inputVoltage() / 4);
+            Serial.println(odrive.inputVoltage() / 4); // vypíše průměrné napětí na článek 
             delay( 1000 );
         }
     }
     Serial.println( "Done" );
     Serial.println( "Turning on" );
-    odrive.turnOn();
+    odrive.turnOn();  // zapnutí odrive 
     if ( odrive.error() ) {
         odrive.dumpErrors();
     }
@@ -105,8 +79,8 @@ void setup() {
     delay( 500 );
 
     while ( true ) {
-        odrive.move( 0, 0 );
-        odrive.move( 1, 10 * 5 * 2400 );
+        odrive.move( 0, 0 );  
+        odrive.move( 1, 10 * 5 * 2400 ); // dojeď s osou 1 na pozici 
         delay( 4000 );
         odrive.move( 0, 10 * 5 * 2400 );
         odrive.move( 1, 0 );
@@ -114,12 +88,12 @@ void setup() {
         if ( odrive.error() )
             odrive.dumpErrors();
     }
-    odrive.turnOff();
+    odrive.turnOff();  // vypíná odrive 
     Serial.println( "Turned off" );
 
     while( true ) {
         delay( 500 );
-        Serial.print( "Pod: " );
+        Serial.print( "Pos: " );
         Serial.println( odrive.getPos( 0 ) );
     }
 
@@ -168,18 +142,6 @@ void loop() {
  
 }
 
-
-// Servo servo; 
-
-// int servo_open = 100;
-// int servo_close = 180;
-// int position_servo = 100; // pro postupne krokovani serva pro kalibraci 
-// int power_motor = 192;
-// int otacka = 235; // pocet tiku na otacku 
-// int ctverec = 250; // pocet tiku na ctverec - Praha
-// int zatoc = 280;  // pocet tiku na zatoceni o 90 stupnu
-// static const uint32_t i2c_freq = 400000;
-// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje 
 
 // ********************************************************************
 
@@ -305,17 +267,5 @@ void testovaci()
 
     }
 
-
-// Servo servo;
-
-// int servo_open = 100;
-// int servo_close = 180;
-// int position_servo = 100; // pro postupne krokovani serva pro kalibraci
-// int power_motor = 192;
-// int otacka = 235; // pocet tiku na otacku
-// int ctverec = 250; // pocet tiku na ctverec - Praha
-// int zatoc = 280;  // pocet tiku na zatoceni o 90 stupnu
-// static const uint32_t i2c_freq = 400000;
-// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 
 }

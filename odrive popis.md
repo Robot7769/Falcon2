@@ -1,5 +1,5 @@
 
-idle - vypnutý výkonový stupeň (říyení motoru )
+idle - vypnutý výkonový stupeň (řízení motoru )
 startovní sekvence - lze použít i později 
 
 1) motor calibration - zjištění odporu a indukčnosti vinutí - pouští do něj různé frekvence (píská) a měří fázový posuv
@@ -20,3 +20,10 @@ if chci vypnout řízení motorů -> volnoběh, šetří baterku, -> přepnu do 
 tak potom po Idle stačí znova zapnout Close loop 
 
 if je chyba, tak reboot restartuje celý odrive, potom je potřeba ho znovu připojit (conect)
+
+taky je možné Odrive resetovat -> chybový stav se vymaže 
+
+Odrive má 4 logické vrstvy:
+
+
+

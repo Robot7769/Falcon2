@@ -1,0 +1,59 @@
+odkladiste
+
+   // odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
+
+    // delay(2000);
+    // Serial.println("Starting");
+    // odrive.run_state(0, ODriveArduino::AXIS_STATE_FULL_CALIBRATION_SEQUENCE, true);
+    // if (!odrive.run_state(1, ODriveArduino::AXIS_STATE_FULL_CALIBRATION_SEQUENCE, true))
+    //     Serial.println("Calibration sequence failed");
+    // odrive.run_state(0, ODriveArduino::AXIS_STATE_CLOSED_LOOP_CONTROL, true);
+    // if (!odrive.run_state(1, ODriveArduino::AXIS_STATE_CLOSED_LOOP_CONTROL, true))
+    //     Serial.println("Failed to set closed loop reulation");
+
+    // Serial.println("Calibration done");
+    // delay(2000);
+
+    // Serial.println("Going up");
+    // for (int i = 0; i != 10000; i += 1) {
+    //     odrive.SetPosition(0, i);
+    //     odrive.SetPosition(1, i);
+    //     delay(1);
+    // }
+    // Serial.println("Going down");
+    // for (int i = 10000; i != 0; i -= 1) {
+    //     odrive.SetPosition(0, i);
+    //     odrive.SetPosition(1, i);
+    //     delay(1);
+    // }
+    // Serial.println("Stop");
+
+    // configureOdrive( odrive );
+
+
+    
+// Servo servo; 
+
+// int servo_open = 100;
+// int servo_close = 180;
+// int position_servo = 100; // pro postupne krokovani serva pro kalibraci 
+// int power_motor = 192;
+// int otacka = 235; // pocet tiku na otacku 
+// int ctverec = 250; // pocet tiku na ctverec - Praha
+// int zatoc = 280;  // pocet tiku na zatoceni o 90 stupnu
+// static const uint32_t i2c_freq = 400000;
+// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje 
+
+
+// Servo servo;
+
+// int servo_open = 100;
+// int servo_close = 180;
+// int position_servo = 100; // pro postupne krokovani serva pro kalibraci
+// int power_motor = 192;
+// int otacka = 235; // pocet tiku na otacku
+// int ctverec = 250; // pocet tiku na ctverec - Praha
+// int zatoc = 280;  // pocet tiku na zatoceni o 90 stupnu
+// static const uint32_t i2c_freq = 400000;
+// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
+
