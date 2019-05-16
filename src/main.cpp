@@ -24,7 +24,7 @@ rb::Manager& rbc()
     return m;
 }
 
-Servo servo0, servo1, servo2, servo3; 
+Servo servo0, servo1, servo2, servo3;
 int position_servo0 = 60;
 int position_servo1 = 90;
 int position_servo2 = 90;
@@ -105,11 +105,11 @@ void setup() {
     delay( 500 );
 
     while ( true ) {
-        odrive.move( 0, 0 );
-        odrive.move( 1, 10 * 5 * 2400 );
+        odrive.move( 0, 0, 20000 );
+        odrive.move( 1, 10 * 5 * 2400, 20000 );
         delay( 4000 );
-        odrive.move( 0, 10 * 5 * 2400 );
-        odrive.move( 1, 0 );
+        odrive.move( 0, 10 * 5 * 2400, 20000 );
+        odrive.move( 1, 0, 20000 );
         delay( 4000 );
         if ( odrive.error() )
             odrive.dumpErrors();
@@ -137,7 +137,7 @@ void setup() {
     send_data.restart();
 }
 
-void testovaci(); // dole pod main 
+void testovaci(); // dole pod main
 void read_joystick();
 
 void loop() {
@@ -157,7 +157,7 @@ void loop() {
     if ( (btn[4]==0) and (btn_last[4]==1) )
         rbc().setMotors().power(OTOCNY_MOTOR, 0)
                          .set();
-    
+
     if ( (btn[5]==1) and (btn_last[5]==0) )
         rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
                          .set();
@@ -165,21 +165,21 @@ void loop() {
     if ( (btn[5]==0) and (btn_last[5]==1) )
         rbc().setMotors().power(OTOCNY_MOTOR, 0)
                          .set();
- 
+
 }
 
 
-// Servo servo; 
+// Servo servo;
 
 // int servo_open = 100;
 // int servo_close = 180;
-// int position_servo = 100; // pro postupne krokovani serva pro kalibraci 
+// int position_servo = 100; // pro postupne krokovani serva pro kalibraci
 // int power_motor = 192;
-// int otacka = 235; // pocet tiku na otacku 
+// int otacka = 235; // pocet tiku na otacku
 // int ctverec = 250; // pocet tiku na ctverec - Praha
 // int zatoc = 280;  // pocet tiku na zatoceni o 90 stupnu
 // static const uint32_t i2c_freq = 400000;
-// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje 
+// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 
 // ********************************************************************
 
@@ -212,12 +212,12 @@ if (SerialBT.available() > 0)
 			    // DO NOTHING - WAITING FOR PACKET
 			    delay(1);
 		    }
-            btn_last[a] = btn[a]; 
+            btn_last[a] = btn[a];
             btn[a] = SerialBT.read();
 		    Serial.print(a, DEC); Serial.print(": "); Serial.print(btn[a], DEC); Serial.print("last: "); Serial.print(btn_last[a], DEC);
         }
         Serial.println(" ");
-        
+
     }
 }
 
@@ -227,7 +227,7 @@ void testovaci()
 {
    char c;
     if(Serial.available() or SerialBT.available() )  {
-        if(Serial.available()) c = Serial.read(); else c = SerialBT.read(); 
+        if(Serial.available()) c = Serial.read(); else c = SerialBT.read();
         // Serial.write("c: "); Serial.println(c); Serial.write(" "); Serial.println(c,DEC);
         if(Serial.available()) {
             char c = Serial.read();
@@ -245,7 +245,7 @@ void testovaci()
                     Serial.print(position_servo3);
                     break;
                 case 'a':
-                    if (position_servo2 >= 5)  position_servo2 = position_servo2 - krok_serva;               
+                    if (position_servo2 >= 5)  position_servo2 = position_servo2 - krok_serva;
                     servo2.write(position_servo2);
                     Serial.write(" 2: ");
                     Serial.print(position_servo2);
@@ -269,7 +269,7 @@ void testovaci()
                     Serial.print(position_servo1);
                     break;
                 case 't':
-                    if (position_servo0 >= 5)  position_servo0 = position_servo0 - krok_serva;               
+                    if (position_servo0 >= 5)  position_servo0 = position_servo0 - krok_serva;
                     servo0.write(position_servo0);
                     Serial.write(" 0: ");
                     Serial.print(position_servo0);
@@ -283,16 +283,16 @@ void testovaci()
                 case 'b':
                     rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
                                     .set();
-                    break;    
+                    break;
                 case 'm':
                     rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
                                     .set();
-                    break; 
+                    break;
 
                 case ' ':
                     rbc().setMotors().power(OTOCNY_MOTOR, 0)
                                     .set();
-                    break; 
+                    break;
 
                 default:
                     Serial.write(c);
