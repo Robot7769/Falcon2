@@ -57,3 +57,19 @@ odkladiste
 // static const uint32_t i2c_freq = 400000;
 // bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 
+
+
+ if ( (btn[4]==1) and (btn_last[4]==0) )
+        rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
+                         .set();
+    if ( (btn[4]==0) and (btn_last[4]==1) )
+        rbc().setMotors().power(OTOCNY_MOTOR, 0)
+                         .set();
+
+    if ( (btn[5]==1) and (btn_last[5]==0) )
+        rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
+                         .set();
+
+    if ( (btn[5]==0) and (btn_last[5]==1) )
+        rbc().setMotors().power(OTOCNY_MOTOR, 0)
+                         .set();

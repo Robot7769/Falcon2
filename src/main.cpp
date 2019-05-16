@@ -33,8 +33,10 @@ int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 5 * 2400 ; // převodovka 1:5,  2400 tiků enkodéru na otáčku motoru
-long max_speed = 20000; // pocet tiku za sekundu
-int8_t axis[7] = {5,6,7,8,9,10,11};
+long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 tiků za sekundu 
+int speed_coef = 100; // nasobeni hodnoty, co leze z joysticku 
+
+int axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
 byte btn_last[8] = {0,0,0,0,0,0,0,0};
 
@@ -59,7 +61,7 @@ void setup() {
 
     Serial.print ("Starting...\n");
     rbc();
-    Serial.print ("RBC initialized1\n");
+    Serial.print ("RBC initialized\n");
     auto& batt = rbc().battery();
     batt.setCoef(9.0);
 
@@ -85,42 +87,48 @@ void setup() {
     Serial.println( "Turned on" );
     delay( 500 );
 
-    while ( true ) {
+        odrive.move( 0, 0, max_speed );
+        odrive.move( 1, 0, max_speed ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
+        delay( 4000 );
+
+        odrive.move( 0, otocka_kola / 2, max_speed );
+        odrive.move( 1, otocka_kola / 2, max_speed );
+        delay( 1000 );
 
         odrive.move( 0, 0, max_speed );
-        odrive.move( 1, 10 * otocka_kola, max_speed ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
-        delay( 4000 );
-        odrive.move( 0, 10 * otocka_kola, max_speed );
         odrive.move( 1, 0, max_speed );
-        delay( 4000 );
+        delay( 1000 );
+
         if ( odrive.error() )
             odrive.dumpErrors();
-    }
-    odrive.turnOff();  // vypíná odrive
-    Serial.println( "Turned off" );
+    
+    // odrive.turnOff();  // vypíná odrive
+    // Serial.println( "Turned off" );
 
-    while( true ) {
-        delay( 500 );
-        Serial.print( "Pos: " );
-        Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0
-    }
+    // while( true ) {
+    //     delay( 500 );
+    //     Serial.print( "Pos: " );
+    //     Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0
+    // }
 
+    // void speed( int axis, float speed );
+    // void setAccel( float accel );
 
-    servo0.attach(27);
-    servo0.write(position_servo0);
-    servo1.attach(26);
-    servo1.write(position_servo1);
-    servo2.attach(4);
-    servo2.write(position_servo2);
-    servo3.attach(32);
-    servo3.write(position_servo3);
-    delay(500);
-    servo3.write(position_servo3-5);
-    send_data.restart();
+    // servo0.attach(27);
+    // servo0.write(position_servo0);
+    // servo1.attach(26);
+    // servo1.write(position_servo1);
+    // servo2.attach(4);
+    // servo2.write(position_servo2);
+    // servo3.attach(32);
+    // servo3.write(position_servo3);
+    // delay(500);
+    // servo3.write(position_servo3-5);
+    // send_data.restart();
 }
 
 void testovaci(); // dole pod main
-void read_joystick(); // dole pod main
+bool read_joystick(); // dole pod main
 
 void loop() {
     if (send_data) {
@@ -128,67 +136,62 @@ void loop() {
         if (L_G_light) L_G_light = false; else  L_G_light = true;
         rbc().leds().green(L_G_light);
         // Serial.println( millis() );
-        // SerialBT.println( millis() ); // na tomto pocitaci COM port 13
+        SerialBT.println( millis() ); // na tomto pocitaci COM port 13
     }
 
     // testovaci();
-    read_joystick();
-    if ( (btn[4]==1) and (btn_last[4]==0) )
-        rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
-                         .set();
-    if ( (btn[4]==0) and (btn_last[4]==1) )
-        rbc().setMotors().power(OTOCNY_MOTOR, 0)
-                         .set();
-
-    if ( (btn[5]==1) and (btn_last[5]==0) )
-        rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
-                         .set();
-
-    if ( (btn[5]==0) and (btn_last[5]==1) )
-        rbc().setMotors().power(OTOCNY_MOTOR, 0)
-                         .set();
-
+    if ( read_joystick() ) {
+        int levy_m = (-axis[1]+ (axis[0] /2 )) * speed_coef;
+        int pravy_m = (-axis[1]- (axis[0] /2 )) * speed_coef;
+        odrive.speed( 0 , levy_m );
+        odrive.speed( 1 , pravy_m  );
+        printf(" %i %i \n ", levy_m, pravy_m );
+    }
+    delay(10);
 }
 
 
 // ********************************************************************
 
-void read_joystick(){
-if (SerialBT.available() > 0)
-    {
-        uint8_t test = SerialBT.read();
-        if (test == 0x80)
-            for (uint8_t x = 0; x < 7; x++)
-            {
-			    while(SerialBT.available() < 1) {
-				    // DO NOTHING - WAITING FOR PACKET
-				    delay(1);
-			    }
+bool read_joystick(){
+    if ( SerialBT.available() == 0 )
+        return false;
 
-                axis[x] = SerialBT.read();
-                Serial.print(x);
-                Serial.print(": ");
-                Serial.print(axis[x], DEC);
-                Serial.print(" ");
-            }
-        else if  ( test == 0x81 )
+    uint8_t test = SerialBT.read();
+    if (test == 0x80) {
+        for (uint8_t x = 0; x < 6; x++) 
         {
-		    while(SerialBT.available() < 1) {
-			    // DO NOTHING - WAITING FOR PACKET
-			    delay(1);
-		    }
-            byte a = SerialBT.read();
-		    while(SerialBT.available() < 1) {
-			    // DO NOTHING - WAITING FOR PACKET
-			    delay(1);
-		    }
-            btn_last[a] = btn[a];
-            btn[a] = SerialBT.read();
-		    Serial.print(a, DEC); Serial.print(": "); Serial.print(btn[a], DEC); Serial.print("last: "); Serial.print(btn_last[a], DEC);
-        }
-        Serial.println(" ");
+            while(SerialBT.available() < 1) {
+                // DO NOTHING - WAITING FOR PACKET
+                delay(1);
+            }
 
+            int8_t tmp = SerialBT.read();
+            axis[x] = tmp;
+            Serial.print(x);
+            Serial.print(": ");
+            Serial.print(axis[x], DEC);
+            Serial.print(" ");
+            
+        }
+        return true;
     }
+    else if  ( test == 0x81 )
+    {
+        while(SerialBT.available() < 1) {
+            // DO NOTHING - WAITING FOR PACKET
+            delay(1);
+        }
+        byte a = SerialBT.read();
+        while(SerialBT.available() < 1) {
+            // DO NOTHING - WAITING FOR PACKET
+            delay(1);
+        }
+        btn_last[a] = btn[a];
+        btn[a] = SerialBT.read();
+        Serial.print(a, DEC); Serial.print(": "); Serial.print(btn[a], DEC); Serial.print("last: "); Serial.print(btn_last[a], DEC);
+    }
+    return false;
 }
 
 
