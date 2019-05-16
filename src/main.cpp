@@ -33,7 +33,7 @@ int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 5 * 2400 ; // převodovka 1:5,  2400 tiků enkodéru na otáčku motoru
-long max_speed = 20000; // pocet tiku za sekundu 
+long max_speed = 20000; // pocet tiku za sekundu
 int8_t axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
 byte btn_last[8] = {0,0,0,0,0,0,0,0};
@@ -61,24 +61,24 @@ void setup() {
     rbc();
     Serial.print ("RBC initialized1\n");
     auto& batt = rbc().battery();
-    batt.setCoef(9.0); 
+    batt.setCoef(9.0);
 
     odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
     Serial.println( "Setup odrive begin" );
-    
-    odrive.initializeMotors( false );  // true - plná kalibrace,  false - kalibrace bez počátečního pískání 
+
+    odrive.initializeMotors( false );  // true - plná kalibrace,  false - kalibrace bez počátečního pískání
     if ( odrive.error() ) {             // zjistí, jestli je chyba
-        odrive.dumpErrors();           // vypíše chybu 
+        odrive.dumpErrors();           // vypíše chybu
         while ( true ) {
             Serial.println( "Plese fix it!" );
             Serial.print("Voltage: ");
-            Serial.println(odrive.inputVoltage() / 4); // vypíše průměrné napětí na článek 
+            Serial.println(odrive.inputVoltage() / 4); // vypíše průměrné napětí na článek
             delay( 1000 );
         }
     }
     Serial.println( "Done" );
     Serial.println( "Turning on" );
-    odrive.turnOn();  // zapnutí odrive 
+    odrive.turnOn();  // zapnutí odrive
     if ( odrive.error() ) {
         odrive.dumpErrors();
     }
@@ -86,7 +86,7 @@ void setup() {
     delay( 500 );
 
     while ( true ) {
-          
+
         odrive.move( 0, 0, max_speed );
         odrive.move( 1, 10 * otocka_kola, max_speed ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
         delay( 4000 );
@@ -96,13 +96,13 @@ void setup() {
         if ( odrive.error() )
             odrive.dumpErrors();
     }
-    odrive.turnOff();  // vypíná odrive 
+    odrive.turnOff();  // vypíná odrive
     Serial.println( "Turned off" );
 
     while( true ) {
         delay( 500 );
         Serial.print( "Pos: " );
-        Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0 
+        Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0
     }
 
 

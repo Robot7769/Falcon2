@@ -41,6 +41,7 @@ String errorStr( int err ) {
         case ODriveArduino::WATCHDOG_TIMER_EXPIRED: return "WATCHDOG_TIMER_EXPIRED";
         case ODriveArduino::READOUT: return "READOUT";
     }
+    return "";
 }
 
 String encoderErrorStr( int err ) {
@@ -53,6 +54,7 @@ String encoderErrorStr( int err ) {
         case ODriveArduino::ILLEGAL_HALL_STATE: return "ILLEGAL_HALL_STATE";
         case ODriveArduino::INDEX_NOT_FOUND_YET: return "INDEX_NOT_FOUND_YET";
     }
+    return "";
 }
 
 String motorErrorStr( int err ) {
@@ -71,6 +73,7 @@ String motorErrorStr( int err ) {
         case ODriveArduino::CURRENT_SENSE_SATURATION: return "CURRENT_SENSE_SATURATION";
         case ODriveArduino::INVERTER_OVER_TEMP: return "INVERTER_OVER_TEMP";
     }
+    return "";
 }
 
 ODriveArduino::ODriveArduino(Stream& serial)
@@ -202,21 +205,30 @@ String ODriveArduino::errorText( int error, int motor, int encoder ) {
     for ( int i = 0; i != 32; i++ ) {
         int mask = 1 << i;
         if ( error & mask ) {
-            res += separator + errorStr( mask );
+            String str = errorStr( mask );
+            if ( str.length() == 0 )
+                break;
+            res += separator + str;
             separator = ", ";
         }
     }
     for ( int i = 0; i != 32; i++ ) {
         int mask = 1 << i;
         if ( motor & mask ) {
-            res += separator + motorErrorStr( mask );
+            String str = motorErrorStr( mask );
+            if ( str.length() == 0 )
+                break;
+            res += separator + str;
             separator = ", ";
         }
     }
     for ( int i = 0; i != 32; i++ ) {
         int mask = 1 << i;
         if ( encoder & mask ) {
-            res += separator + encoderErrorStr( mask );
+            String str = encoderErrorStr( mask );
+            if ( str.length() == 0 )
+                break;
+            res += separator + str;
             separator = ", ";
         }
     }
