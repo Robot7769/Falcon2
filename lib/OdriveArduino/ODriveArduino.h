@@ -82,7 +82,9 @@ public:
 
     float getPos( int axis );
 
-    void move( int axis, float pos );
+    void move( int axis, float pos, float speed );
+    void speed( int axis, float speed );
+    void setAccel( float accel );
 
     template < typename T >
     void setProperty(String property, T val) {

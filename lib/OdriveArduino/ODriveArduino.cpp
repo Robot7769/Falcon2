@@ -246,7 +246,21 @@ float ODriveArduino::getPos( int axis ) {
     return pos;
 }
 
-void ODriveArduino::move( int axis, float pos ) {
+void ODriveArduino::move( int axis, float pos, float speed ) {
     assert( axis == 0 || axis == 1 );
+    serial_ << "w axis" <<  axis << ".trap_traj.config.vel_limit " << speed << "\n";
     serial_ << "t " << axis << " " << pos << "\n";
 }
+
+void ODriveArduino::setAccel( float accel ) {
+    clearBuffer();
+    for ( int axis : { 0, 1 } ) {
+        serial_ << "w axis" <<  axis << ".trap_traj.config.accel_limit " << accel << "\n";
+        serial_ << "w axis" <<  axis << ".trap_traj.config.decel_limit " << accel << "\n";
+    }
+}
+
+void ODriveArduino::speed( int axis, float speed ) {
+    serial_ << "v " << axis << " " << speed << "\n";
+}
+
