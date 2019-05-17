@@ -34,7 +34,7 @@ int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 5 * 2400 ; // převodovka 1:5,  2400 tiků enkodéru na otáčku motoru
 long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 tiků za sekundu 
-int speed_coef = 100; // nasobeni hodnoty, co leze z joysticku 
+int speed_coef = 300; // nasobeni hodnoty, co leze z joysticku 
 
 int axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
