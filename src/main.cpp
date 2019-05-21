@@ -29,12 +29,27 @@ int position_servo0 = 60;
 int position_servo1 = 90;
 int position_servo2 = 90;
 int position_servo3 = 120;
+double pi = 3.14159265358979;
+int alfa = 60;
+double alfa_rad = 1.04719755119659;
+int beta = 30;
+double beta_rad = 0.52359877559829;
+int gama = 90;
+double gama_rad = 1.57079632679489;
+float arm1 = 120.00;         //v mm
+float arm2 = 80.00;          //v mm
+float prepona_arm = 143.00;  //v mm
+float delka_arm = 70.00;     //v mm
+float vyska_arm = 120.00;    //v mm
+float max_arm = arm1 + arm2;
+float min_arm = 0.00;
+float krok_arm = 3.00;
 int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
-int otocka_kola = 5 * 2400 ; // převodovka 1:5,  2400 tiků enkodéru na otáčku motoru
-long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 tiků za sekundu 
-int speed_coef = 300; // nasobeni hodnoty, co leze z joysticku 
+int otocka_kola = 8 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
+long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 tiků za sekundu
+int speed_coef = 500; // nasobeni hodnoty, co leze z joysticku
 
 int axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
@@ -101,7 +116,7 @@ void setup() {
 
         if ( odrive.error() )
             odrive.dumpErrors();
-    
+
     // odrive.turnOff();  // vypíná odrive
     // Serial.println( "Turned off" );
 
@@ -126,7 +141,7 @@ void setup() {
     // servo3.write(position_servo3-5);
     // send_data.restart();
 }
-
+void arm();
 void testovaci(); // dole pod main
 bool read_joystick(); // dole pod main
 
@@ -139,6 +154,7 @@ void loop() {
         SerialBT.println( millis() ); // na tomto pocitaci COM port 13
     }
 
+    // arm();
     // testovaci();
     if ( read_joystick() ) {
         int levy_m = (-axis[1]+ (axis[0] /2 )) * speed_coef;
@@ -159,7 +175,7 @@ bool read_joystick(){
 
     uint8_t test = SerialBT.read();
     if (test == 0x80) {
-        for (uint8_t x = 0; x < 6; x++) 
+        for (uint8_t x = 0; x < 6; x++)
         {
             while(SerialBT.available() < 1) {
                 // DO NOTHING - WAITING FOR PACKET
@@ -172,7 +188,7 @@ bool read_joystick(){
             Serial.print(": ");
             Serial.print(axis[x], DEC);
             Serial.print(" ");
-            
+
         }
         return true;
     }
@@ -279,4 +295,39 @@ void testovaci()
     }
 
 
+}
+
+void arm() {
+    if (axis[6]<-10) {
+        if (vyska_arm < max_arm) {
+          vyska_arm = vyska_arm + krok_arm;
+        }
+    }
+    else if (axis[6]> 10) {
+        if (vyska_arm > min_arm) {
+          vyska_arm = vyska_arm - krok_arm;
+        }
+    }
+
+    if (axis[3]<-10) {
+        if (delka_arm < max_arm) {
+          delka_arm = delka_arm + krok_arm;
+        }
+    }
+    else if (axis[3]> 10) {
+        if (delka_arm > min_arm) {
+          delka_arm = delka_arm - krok_arm;
+        }
+    }
+
+prepona_arm = sqrt(((delka_arm*delka_arm)+(vyska_arm*vyska_arm)));
+alfa_rad = atan((vyska_arm/delka_arm));
+alfa = (int)round((alfa_rad*(180/pi)));
+beta_rad = acos((((arm1*arm1)+(prepona_arm*prepona_arm)-(arm2*arm2))/(2*arm1*prepona_arm)));
+beta = (int)round((beta_rad*(180/pi)));
+gama_rad = acos((((arm2*arm2)+(arm1*arm1)-(prepona_arm*prepona_arm))/(2*arm2*arm1)));
+gama = (int)round((gama_rad*(180/pi)));
+
+position_servo0 = 180 - alfa - beta;
+position_servo1 = gama;
 }

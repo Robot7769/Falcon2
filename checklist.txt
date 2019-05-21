@@ -1,0 +1,21 @@
+rozmìry robota 325x176mm
+
+-Zkontrolovat stav baterek
+-Zkontrolovat STOP tlaèítko 
+-Zkontrolovat všechny kabeli
+	-dotažené svozkovnice napájení RBC
+	-napájení ODRIVE	
+	-kabely k motorùm
+	-kabely k rezistoru
+	-enkodéry
+	-žlutý motor
+	-sériová linka
+	-4 serva + napájení serva0
+	-3 barevné senzory 
+	-pixy kamera 
+	-maják napájení + kominikace
+-Zkontrolovat zda jsou utažené všechny šroubky
+-Zkontrolovat kola
+-Zkontrolovat teplotu motorù a serv
+-Zkontrolovat šnek a ozubené kolo
+-Zkontrolovat 2 všestraná koleèka
