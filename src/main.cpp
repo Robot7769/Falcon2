@@ -48,7 +48,7 @@ int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 8 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
-long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 tiků za sekundu
+long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 otacek motoru za sekundu
 int speed_coef = 100; // nasobeni hodnoty, co leze z joysticku
 
 int axis[7] = {5,6,7,8,9,10,11};
@@ -103,11 +103,11 @@ void setup() {
     delay( 500 );
 
         odrive.move( 0, 0, max_speed );
-        odrive.move( 1, 0, max_speed ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
+        odrive.move( 1, 0, max_speed ); 
         delay( 4000 );
 
         odrive.move( 0, otocka_kola / 2, max_speed );
-        odrive.move( 1, otocka_kola / 2, max_speed );
+        odrive.move( 1, otocka_kola / 2, max_speed ); // dojeď s osou 1 na pozici ... rychlostí max_speed tiků na otáčku 
         delay( 1000 );
 
         odrive.move( 0, 0, max_speed );
@@ -139,7 +139,7 @@ void setup() {
     // servo3.write(position_servo3);
     // delay(500);
     // servo3.write(position_servo3-5);
-    // send_data.restart();
+       send_data.restart();
 }
 void arm();
 void testovaci(); // dole pod main
@@ -173,9 +173,10 @@ bool read_joystick(){
     if ( SerialBT.available() == 0 )
         return false;
 
-    uint8_t test = SerialBT.read();
+    int test = SerialBT.read();
     if (test == 0x80) {
-        for (uint8_t x = 0; x < 6; x++)
+        int axis_count = SerialBT.read();
+        for (int x = 0; x < axis_count; x++)
         {
             while(SerialBT.available() < 1) {
                 // DO NOTHING - WAITING FOR PACKET
