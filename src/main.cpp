@@ -49,7 +49,7 @@ int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 8 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
 long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 otacek motoru za sekundu
-int speed_coef = 100; // nasobeni hodnoty, co leze z joysticku
+int speed_coef = 500; // nasobeni hodnoty, co leze z joysticku
 
 int axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
@@ -62,7 +62,7 @@ timeout send_data { msec(500) }; // timeout zajistuje posilani dat do PC kazdych
 
 void setup() {
     Serial.begin(115200);
-    if (!SerialBT.begin("RoadAssistance")) //Bluetooth device name
+    if (!SerialBT.begin("RoadAssistance")) //Bluetooth device name // na tomto pocitaci COM port 13
     {
         Serial.println("!!! Bluetooth initialization failed!");
         serial = &Serial;
@@ -102,12 +102,12 @@ void setup() {
     Serial.println( "Turned on" );
     delay( 500 );
 
-        odrive.move( 0, 0, max_speed );
+        odrive.move( 0, 0, max_speed ); // dojeď s osou 0 na pozici 0 rychlostí max_speed tiků na otáčku 
         odrive.move( 1, 0, max_speed ); 
         delay( 4000 );
 
         odrive.move( 0, otocka_kola / 2, max_speed );
-        odrive.move( 1, otocka_kola / 2, max_speed ); // dojeď s osou 1 na pozici ... rychlostí max_speed tiků na otáčku 
+        odrive.move( 1, otocka_kola / 2, max_speed ); 
         delay( 1000 );
 
         odrive.move( 0, 0, max_speed );
@@ -126,8 +126,8 @@ void setup() {
     //     Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0
     // }
 
-    // void speed( int axis, float speed );
-    // void setAccel( float accel );
+    // void speed( int axis, float speed ); // pro osu axis nastavi rychlost speed v ticich za sekundu 
+    // void setAccel( float accel );  // nastavi zrychleni pro dalsi pohyb
 
     // servo0.attach(27);
     // servo0.write(position_servo0);
@@ -161,10 +161,11 @@ void loop() {
         int pravy_m = (-axis[1]- (axis[0] /2 )) * speed_coef;
         odrive.speed( 0 , levy_m );
         odrive.speed( 1 , pravy_m  );
-        printf(" %i %i \n ", levy_m, pravy_m );
+        printf(" %i %i \n ", levy_m, pravy_m ); 
+        SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
     }
     delay(10);
-}
+} 
 
 
 // ********************************************************************
@@ -185,10 +186,14 @@ bool read_joystick(){
 
             int8_t tmp = SerialBT.read();
             axis[x] = tmp;
-            Serial.print(x);
+            Serial.print(x);  
             Serial.print(": ");
             Serial.print(axis[x], DEC);
             Serial.print(" ");
+            SerialBT.print(x);  
+            SerialBT.print(": ");
+            SerialBT.print(axis[x], DEC);
+            SerialBT.print(" ");
 
         }
         return true;

@@ -15,4 +15,7 @@ motor ceka, nez se rozjede,
 servo0 chce vymenit pin signalu
 
 
+
+
+
  
