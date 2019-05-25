@@ -104,12 +104,12 @@ void setup() {
     Serial.println( "Turned on" );
     delay( 500 );
 
-        odrive.move( 0, 0, max_speed ); // dojeď s osou 0 na pozici 0 rychlostí max_speed tiků na otáčku
-        odrive.move( 1, 0, max_speed );
+        odrive.move( 0, 0, max_speed ); // dojeď s osou 0 na pozici 0 rychlostí max_speed tiků na otáčku 
+        odrive.move( 1, 0, max_speed ); 
         delay( 4000 );
 
         odrive.move( 0, otocka_kola / 2, max_speed );
-        odrive.move( 1, otocka_kola / 2, max_speed );
+        odrive.move( 1, otocka_kola / 2, max_speed ); 
         delay( 1000 );
 
         odrive.move( 0, 0, max_speed );
@@ -169,7 +169,7 @@ void loop() {
         SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
     }
     delay(10);
-}
+} 
 
 
 // ********************************************************************
@@ -193,7 +193,7 @@ bool read_joystick()
 
             int8_t tmp = SerialBT.read();
             axis[x] = tmp;
-            Serial.print(x);
+            Serial.print(x);  
             Serial.print(": ");
             Serial.print(axis[x], DEC);
             Serial.print(" ");

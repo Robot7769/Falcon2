@@ -12,8 +12,13 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
+<<<<<<< HEAD
             "executable": "c:/Users/PC01/Desktop/HONZA/PROGRAMOVÁNÍ/Falcon/Falcon2/.pioenvs/esp32dev/firmware.elf",
             "toolchainBinDir": "C:/Users/PC01/.platformio/packages/toolchain-xtensa32/bin",
+=======
+            "executable": "c:/git/Roadside2019_Skrabal_John/.pioenvs/esp32dev/firmware.elf",
+            "toolchainBinDir": "C:/Users/BurdaM/.platformio/packages/toolchain-xtensa32/bin",
+>>>>>>> 94ff70893b701d9e3465e42ea4c7821e5f4adc77
             "preLaunchTask": {
                 "type": "PlatformIO",
                 "task": "Pre-Debug"
@@ -24,8 +29,13 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
+<<<<<<< HEAD
             "executable": "c:/Users/PC01/Desktop/HONZA/PROGRAMOVÁNÍ/Falcon/Falcon2/.pioenvs/esp32dev/firmware.elf",
             "toolchainBinDir": "C:/Users/PC01/.platformio/packages/toolchain-xtensa32/bin",
+=======
+            "executable": "c:/git/Roadside2019_Skrabal_John/.pioenvs/esp32dev/firmware.elf",
+            "toolchainBinDir": "C:/Users/BurdaM/.platformio/packages/toolchain-xtensa32/bin",
+>>>>>>> 94ff70893b701d9e3465e42ea4c7821e5f4adc77
             "internalConsoleOptions": "openOnSessionStart"
         }
     ]
