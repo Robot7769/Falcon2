@@ -49,7 +49,7 @@ int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 13 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
 long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 otacek motoru za sekundu
-int speed_coef = 500; // nasobeni hodnoty, co leze z joysticku
+int speed_coef = 50000; // nasobeni hodnoty, co leze z joysticku
 
 int axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
@@ -154,17 +154,23 @@ void loop() {
         if (L_G_light) L_G_light = false; else  L_G_light = true;
         rbc().leds().green(L_G_light);
         // Serial.println( millis() );
-        SerialBT.println( millis() ); // na tomto pocitaci COM port 13
+        SerialBT.println( millis() ); // na pocitaci Burda COM port 13
     }
 
     // arm();
     // testovaci();
     if ( read_joystick() )
     {
-        int levy_m = -(-axis[1]+ (axis[0] /2 )) * speed_coef;
-        int pravy_m = (-axis[1]- (axis[0] /2 )) * speed_coef;
+        float axis_0 = (axis[0] < 10) ? 0 : axis[0] /128; 
+        axis_0 = axis_0*axis_0*axis_0;
+        float axis_1 = (axis[1] < 10) ? 0 : axis[1] /128; 
+        axis_1 = axis_1*axis_1*axis_1;
+        int levy_m = (axis_1- (axis_0 /2 )) * speed_coef;
+        int pravy_m = (axis_1+ (axis_0 /2 )) * speed_coef;
         odrive.speed( 0 , levy_m );
         odrive.speed( 1 , pravy_m  );
+        if ( odrive.error() )
+            odrive.dumpErrors();
         printf(" %i %i \n ", levy_m, pravy_m );
         SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
     }
