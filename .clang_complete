@@ -56,14 +56,24 @@
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\tools\sdk\include\fb_gfx
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\cores\esp32
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\variants\esp32
--IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Vyvojovy_diagram\Esp32Drive\lib\OdriveArduino
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\lib\OdriveArduino
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\.piolibdeps\RB3201-RBControl_ID5532\src
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\.piolibdeps\ServoESP32
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\.piolibdeps\ServoESP32_ID1739\src
+-IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\BluetoothSerial\src
+-IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\WiFi\src
+-IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\Wire\src
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\lib\Pixy2
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\lib\format
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\.piolibdeps\Adafruit TCS34725
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\.piolibdeps\RB3201-RBControl
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\.piolibdeps\RB3201-RBProtocol_ID5534\src
 -IC:\Users\PC01\.platformio\lib\Adafruit NeoPixel_ID28
 -IC:\Users\PC01\.platformio\lib\Blynk_ID415\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\ArduinoOTA\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\AsyncUDP\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\AzureIoT\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\BLE\src
--IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\BluetoothSerial\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\DNSServer\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\EEPROM\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\ESP32\src
@@ -82,17 +92,15 @@
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\Ticker\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\Update\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\WebServer\src
--IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\WiFi\src
 -IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\WiFiClientSecure\src
--IC:\Users\PC01\.platformio\packages\framework-arduinoespressif32\libraries\Wire\src
 -IC:\Users\PC01\.platformio\packages\toolchain-xtensa32\xtensa-esp32-elf\include
 -IC:\Users\PC01\.platformio\packages\toolchain-xtensa32\xtensa-esp32-elf\include\c++\5.2.0
 -IC:\Users\PC01\.platformio\packages\toolchain-xtensa32\xtensa-esp32-elf\include\c++\5.2.0\xtensa-esp32-elf
 -IC:\Users\PC01\.platformio\packages\toolchain-xtensa32\lib\gcc\xtensa-esp32-elf\5.2.0\include
 -IC:\Users\PC01\.platformio\packages\toolchain-xtensa32\lib\gcc\xtensa-esp32-elf\5.2.0\include-fixed
 -IC:\Users\PC01\.platformio\packages\tool-unity
--IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Vyvojovy_diagram\Esp32Drive\include
--IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Vyvojovy_diagram\Esp32Drive\src
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\include
+-IC:\Users\PC01\Desktop\HONZA\PROGRAMOVÁNÍ\Falcon\Falcon2\src
 -DPLATFORMIO=30607
 -DARDUINO_ESP32_DEV
 -DESP32

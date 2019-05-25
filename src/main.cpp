@@ -10,6 +10,7 @@
 
 // #include <HardwareSerial.h>
 #include <ODriveArduino.h>
+#define PNR 57.29577951308232
 
 using rb::LED_GREEN;
 void configureOdrive( ODriveArduino& odrive );
@@ -20,7 +21,7 @@ ODriveArduino odrive(odriveSerial);
 
 rb::Manager& rbc()
 {
-    static rb::Manager m(false);  // ve výchozím stavu se motory po puštění tlačítka vypínají, false zařídí, že pojedou, dokud nedostanou další pokyn
+    static rb::Manager m(false,false);  // ve výchozím stavu se motory po puštění tlačítka vypínají, false zařídí, že pojedou, dokud nedostanou další pokyn
     return m;
 }
 
@@ -29,7 +30,6 @@ int position_servo0 = 85;
 int position_servo1 = 165;
 int position_servo2 = 180;
 int position_servo3 = 160;
-double pi = 3.14159265358979;
 int alfa = 60;
 double alfa_rad = 1.04719755119659;
 int beta = 30;
@@ -47,7 +47,7 @@ float krok_arm = 3.00;
 int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
-int otocka_kola = 8 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
+int otocka_kola = 13 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
 long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 otacek motoru za sekundu
 int speed_coef = 500; // nasobeni hodnoty, co leze z joysticku
 
@@ -84,13 +84,15 @@ void setup() {
     Serial.println( "Setup odrive begin" );
 
     odrive.initializeMotors( false );  // true - plná kalibrace,  false - kalibrace bez počátečního pískání
-    if ( odrive.error() ) {             // zjistí, jestli je chyba
+    if ( odrive.error() )
+    {             // zjistí, jestli je chyba
         odrive.dumpErrors();           // vypíše chybu
-        while ( true ) {
+        while ( true )
+        {
             Serial.println( "Plese fix it!" );
             Serial.print("Voltage: ");
             Serial.println(odrive.inputVoltage() / 4); // vypíše průměrné napětí na článek
-            delay( 1000 );
+            delay( 10000 );
         }
     }
     Serial.println( "Done" );
@@ -146,7 +148,8 @@ void testovaci(); // dole pod main
 bool read_joystick(); // dole pod main
 
 void loop() {
-    if (send_data) {
+    if (send_data)
+    {
         send_data.ack();
         if (L_G_light) L_G_light = false; else  L_G_light = true;
         rbc().leds().green(L_G_light);
@@ -156,7 +159,8 @@ void loop() {
 
     // arm();
     // testovaci();
-    if ( read_joystick() ) {
+    if ( read_joystick() )
+    {
         int levy_m = -(-axis[1]+ (axis[0] /2 )) * speed_coef;
         int pravy_m = (-axis[1]- (axis[0] /2 )) * speed_coef;
         odrive.speed( 0 , levy_m );
@@ -170,16 +174,19 @@ void loop() {
 
 // ********************************************************************
 
-bool read_joystick(){
+bool read_joystick()
+{
     if ( SerialBT.available() == 0 )
         return false;
 
     int test = SerialBT.read();
-    if (test == 0x80) {
+    if (test == 0x80)
+    {
         int axis_count = SerialBT.read();
         for (int x = 0; x < axis_count; x++)
         {
-            while(SerialBT.available() < 1) {
+            while(SerialBT.available() < 1)
+            {
                 // DO NOTHING - WAITING FOR PACKET
                 delay(1);
             }
@@ -303,37 +310,59 @@ void testovaci()
 
 }
 
-void arm() {
-    if (axis[6]<-10) {
-        if (vyska_arm < max_arm) {
+void arm()
+{
+    if (axis[6]<-10)
+    {
+        if (vyska_arm < max_arm)
+        {
           vyska_arm = vyska_arm + krok_arm;
         }
     }
-    else if (axis[6]> 10) {
-        if (vyska_arm > min_arm) {
+    else if (axis[6]> 10)
+    {
+        if (vyska_arm > min_arm)
+        {
           vyska_arm = vyska_arm - krok_arm;
         }
     }
 
-    if (axis[3]<-10) {
-        if (delka_arm < max_arm) {
+    if (axis[3]<-10)
+    {
+        if (delka_arm < max_arm)
+        {
           delka_arm = delka_arm + krok_arm;
         }
     }
-    else if (axis[3]> 10) {
-        if (delka_arm > min_arm) {
+    else if (axis[3]> 10)
+    {
+        if (delka_arm > min_arm)
+        {
           delka_arm = delka_arm - krok_arm;
         }
     }
 
-prepona_arm = sqrt(((delka_arm*delka_arm)+(vyska_arm*vyska_arm)));
-alfa_rad = atan((vyska_arm/delka_arm));
-alfa = (int)round((alfa_rad*(180/pi)));
-beta_rad = acos((((arm1*arm1)+(prepona_arm*prepona_arm)-(arm2*arm2))/(2*arm1*prepona_arm)));
-beta = (int)round((beta_rad*(180/pi)));
-gama_rad = acos((((arm2*arm2)+(arm1*arm1)-(prepona_arm*prepona_arm))/(2*arm2*arm1)));
-gama = (int)round((gama_rad*(180/pi)));
+    prepona_arm = sqrt(((delka_arm*delka_arm)+(vyska_arm*vyska_arm)));
+    alfa_rad = atan((vyska_arm/delka_arm));
+    alfa = (int)round((alfa_rad*PNR));
+    beta_rad = acos((((arm1*arm1)+(prepona_arm*prepona_arm)-(arm2*arm2))/(2*arm1*prepona_arm)));
+    beta = (int)round((beta_rad*PNR));
+    gama_rad = acos((((arm2*arm2)+(arm1*arm1)-(prepona_arm*prepona_arm))/(2*arm2*arm1)));
+    gama = (int)round((gama_rad*PNR));
 
-position_servo0 = 180 - alfa - beta;
-position_servo1 = gama;
+    position_servo0 = 180 - alfa - beta;
+    position_servo1 = gama;
+
+    if ( (btn[4]==1) and (btn_last[4]==0) )
+        rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
+                             .set();
+    if ( (btn[4]==0) and (btn_last[4]==1) )
+        rbc().setMotors().power(OTOCNY_MOTOR, 0)
+                         .set();
+    if ( (btn[5]==1) and (btn_last[5]==0) )
+        rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
+                         .set();
+    if ( (btn[5]==0) and (btn_last[5]==1) )
+        rbc().setMotors().power(OTOCNY_MOTOR, 0)
+                         .set();
 }
