@@ -25,10 +25,10 @@ rb::Manager& rbc()
 }
 
 Servo servo0, servo1, servo2, servo3;
-int position_servo0 = 60;
-int position_servo1 = 90;
-int position_servo2 = 90;
-int position_servo3 = 120;
+int position_servo0 = 85;
+int position_servo1 = 165;
+int position_servo2 = 180;
+int position_servo3 = 160;
 double pi = 3.14159265358979;
 int alfa = 60;
 double alfa_rad = 1.04719755119659;
@@ -48,7 +48,7 @@ int krok_serva = 2;
 int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 8 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
-long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 tiků za sekundu
+long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 otacek motoru za sekundu
 int speed_coef = 500; // nasobeni hodnoty, co leze z joysticku
 
 int axis[7] = {5,6,7,8,9,10,11};
@@ -62,7 +62,7 @@ timeout send_data { msec(500) }; // timeout zajistuje posilani dat do PC kazdych
 
 void setup() {
     Serial.begin(115200);
-    if (!SerialBT.begin("RoadAssistance")) //Bluetooth device name
+    if (!SerialBT.begin("RoadAssistance")) //Bluetooth device name // na tomto pocitaci COM port 13
     {
         Serial.println("!!! Bluetooth initialization failed!");
         serial = &Serial;
@@ -102,8 +102,8 @@ void setup() {
     Serial.println( "Turned on" );
     delay( 500 );
 
-        odrive.move( 0, 0, max_speed );
-        odrive.move( 1, 0, max_speed ); // dojeď s osou 1 na pozici ... rychlostí 20000 tiků na otáčku
+        odrive.move( 0, 0, max_speed ); // dojeď s osou 0 na pozici 0 rychlostí max_speed tiků na otáčku
+        odrive.move( 1, 0, max_speed );
         delay( 4000 );
 
         odrive.move( 0, otocka_kola / 2, max_speed );
@@ -126,20 +126,20 @@ void setup() {
     //     Serial.println( odrive.getPos( 0 ) );  // vraci pozici enkoderu osy 0
     // }
 
-    // void speed( int axis, float speed );
-    // void setAccel( float accel );
+    // void speed( int axis, float speed ); // pro osu axis nastavi rychlost speed v ticich za sekundu
+    // void setAccel( float accel );  // nastavi zrychleni pro dalsi pohyb
 
-    // servo0.attach(27);
-    // servo0.write(position_servo0);
-    // servo1.attach(26);
-    // servo1.write(position_servo1);
-    // servo2.attach(4);
-    // servo2.write(position_servo2);
-    // servo3.attach(32);
-    // servo3.write(position_servo3);
+    servo0.attach(27);
+    servo0.write(position_servo0);
+    servo1.attach(26);
+    servo1.write(position_servo1);
+    servo2.attach(4);
+    servo2.write(position_servo2);
+    servo3.attach(32);
+    servo3.write(position_servo3);
     // delay(500);
     // servo3.write(position_servo3-5);
-    // send_data.restart();
+       send_data.restart();
 }
 void arm();
 void testovaci(); // dole pod main
@@ -157,11 +157,12 @@ void loop() {
     // arm();
     // testovaci();
     if ( read_joystick() ) {
-        int levy_m = (-axis[1]+ (axis[0] /2 )) * speed_coef;
+        int levy_m = -(-axis[1]+ (axis[0] /2 )) * speed_coef;
         int pravy_m = (-axis[1]- (axis[0] /2 )) * speed_coef;
         odrive.speed( 0 , levy_m );
         odrive.speed( 1 , pravy_m  );
         printf(" %i %i \n ", levy_m, pravy_m );
+        SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
     }
     delay(10);
 }
@@ -173,9 +174,10 @@ bool read_joystick(){
     if ( SerialBT.available() == 0 )
         return false;
 
-    uint8_t test = SerialBT.read();
+    int test = SerialBT.read();
     if (test == 0x80) {
-        for (uint8_t x = 0; x < 6; x++)
+        int axis_count = SerialBT.read();
+        for (int x = 0; x < axis_count; x++)
         {
             while(SerialBT.available() < 1) {
                 // DO NOTHING - WAITING FOR PACKET
@@ -188,6 +190,10 @@ bool read_joystick(){
             Serial.print(": ");
             Serial.print(axis[x], DEC);
             Serial.print(" ");
+            SerialBT.print(x);
+            SerialBT.print(": ");
+            SerialBT.print(axis[x], DEC);
+            SerialBT.print(" ");
 
         }
         return true;
