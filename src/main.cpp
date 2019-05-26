@@ -172,6 +172,10 @@ void loop() {
         if ( odrive.error() )
             odrive.dumpErrors();
         printf(" %i %i \n ", levy_m, pravy_m );
+        Serial.println(levy_m);
+        Serial.println(pravy_m);
+        SerialBT.println(levy_m);
+        SerialBT.println(pravy_m);
         SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
     }
     delay(10);
