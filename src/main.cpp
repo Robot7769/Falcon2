@@ -80,6 +80,10 @@ void setup() {
     auto& batt = rbc().battery();
     batt.setCoef(9.0);
 
+ 
+    rbc().leds().blue( true );
+    //rb::Leds::blue(true);  // zapne modrou LED 
+
     odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
     Serial.println( "Setup odrive begin" );
 
@@ -161,9 +165,9 @@ void loop() {
     // testovaci();
     if ( read_joystick() )
     {
-        float axis_0 = (axis[0] < 10) ? 0 : axis[0] /128; 
+        float axis_0 = (abs(axis[0]) < 10) ? 0 : axis[0] /128.0; 
         axis_0 = axis_0*axis_0*axis_0;
-        float axis_1 = (axis[1] < 10) ? 0 : axis[1] /128; 
+        float axis_1 = (abs(axis[1]) < 10) ? 0 : axis[1] /128.0; 
         axis_1 = axis_1*axis_1*axis_1;
         int levy_m = (axis_1- (axis_0 /2 )) * speed_coef;
         int pravy_m = (axis_1+ (axis_0 /2 )) * speed_coef;
