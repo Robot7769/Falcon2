@@ -58,7 +58,7 @@ byte btn_last[8] = {0,0,0,0,0,0,0,0};
 BluetoothSerial SerialBT;
 Stream* serial = nullptr;
 
-timeout send_data { msec(500) }; // timeout zajistuje posilani dat do PC kazdych 500 ms
+timeout send_data { msec(1000) }; // timeout zajistuje posilani dat do PC kazdych 500 ms
 
 void setup() {
     Serial.begin(115200);
@@ -81,8 +81,7 @@ void setup() {
     batt.setCoef(9.0);
 
  
-    rbc().leds().blue( true );
-    //rb::Leds::blue(true);  // zapne modrou LED 
+    rbc().leds().blue( true );  // zapne modrou LED - tim zapne i Odrive 
 
     odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
     Serial.println( "Setup odrive begin" );
@@ -157,31 +156,31 @@ void loop() {
         send_data.ack();
         if (L_G_light) L_G_light = false; else  L_G_light = true;
         rbc().leds().green(L_G_light);
-        // Serial.println( millis() );
+        Serial.println( millis() );
         SerialBT.println( millis() ); // na pocitaci Burda COM port 13
     }
 
     // arm();
-    // testovaci();
-    if ( read_joystick() )
-    {
-        float axis_0 = (abs(axis[0]) < 10) ? 0 : axis[0] /128.0; 
-        axis_0 = axis_0*axis_0*axis_0;
-        float axis_1 = (abs(axis[1]) < 10) ? 0 : axis[1] /128.0; 
-        axis_1 = axis_1*axis_1*axis_1;
-        int levy_m = (axis_1- (axis_0 /2 )) * speed_coef;
-        int pravy_m = (axis_1+ (axis_0 /2 )) * speed_coef;
-        odrive.speed( 0 , levy_m );
-        odrive.speed( 1 , pravy_m  );
-        if ( odrive.error() )
-            odrive.dumpErrors();
-        printf(" %i %i \n ", levy_m, pravy_m );
-        Serial.println(levy_m);
-        Serial.println(pravy_m);
-        SerialBT.println(levy_m);
-        SerialBT.println(pravy_m);
-        SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
-    }
+    testovaci();
+    // if ( read_joystick() )
+    // {
+    //     float axis_0 = (abs(axis[0]) < 10) ? 0 : axis[0] /128.0; 
+    //     axis_0 = axis_0*axis_0*axis_0;
+    //     float axis_1 = (abs(axis[1]) < 10) ? 0 : axis[1] /128.0; 
+    //     axis_1 = axis_1*axis_1*axis_1;
+    //     int levy_m = (axis_1- (axis_0 /2 )) * speed_coef;
+    //     int pravy_m = (axis_1+ (axis_0 /2 )) * speed_coef;
+    //     odrive.speed( 0 , levy_m );
+    //     odrive.speed( 1 , pravy_m  );
+    //     if ( odrive.error() )
+    //         odrive.dumpErrors();
+    //     printf(" %i %i \n ", levy_m, pravy_m );
+    //     Serial.println(levy_m);
+    //     Serial.println(pravy_m);
+    //     SerialBT.println(levy_m);
+    //     SerialBT.println(pravy_m);
+    //     SerialBT.print(levy_m); SerialBT.print(" "); SerialBT.println(pravy_m);
+    // }
     delay(10);
 } 
 
@@ -233,6 +232,7 @@ bool read_joystick()
         btn_last[a] = btn[a];
         btn[a] = SerialBT.read();
         Serial.print(a, DEC); Serial.print(": "); Serial.print(btn[a], DEC); Serial.print("last: "); Serial.print(btn_last[a], DEC);
+        return true;
     }
     return false;
 }
@@ -244,9 +244,7 @@ void testovaci()
    char c;
     if(Serial.available() or SerialBT.available() )  {
         if(Serial.available()) c = Serial.read(); else c = SerialBT.read();
-        // Serial.write("c: "); Serial.println(c); Serial.write(" "); Serial.println(c,DEC);
-        if(Serial.available()) {
-            char c = Serial.read();
+        Serial.write("c: "); Serial.println(c); // Serial.write(" "); Serial.println(c,DEC);
             switch(c) {
                 case 'q':
                     if (position_servo3 >= 5)  position_servo3 = position_servo3 - krok_serva;
@@ -298,23 +296,23 @@ void testovaci()
                     break;
                 case 'b':
                     rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
-                                    .set();
+                                     .set();
                     break;
                 case 'm':
                     rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
-                                    .set();
+                                     .set();
                     break;
 
                 case ' ':
                     rbc().setMotors().power(OTOCNY_MOTOR, 0)
-                                    .set();
+                                     .set();
                     break;
 
                 default:
                     Serial.write(c);
                     break;
             }
-        }
+        
         // delay(10);
         // Serial.println(millis());
 
