@@ -49,7 +49,7 @@ int motor_power = 80;
 bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 int otocka_kola = 13 * 2400 ; // převodovka (1:5) 1:8,  2400 tiků enkodéru na otáčku motoru
 long max_speed = 20000; // pocet tiku za sekundu max cca 200000,  enkodéry zvládají cca 5000 otacek motoru za sekundu
-int speed_coef = 50000; // nasobeni hodnoty, co leze z joysticku
+int speed_coef = 200000; // nasobeni hodnoty, co leze z joysticku
 
 int axis[7] = {5,6,7,8,9,10,11};
 byte btn[8] = {0,0,0,0,0,0,0,0};
@@ -77,8 +77,16 @@ void setup() {
     Serial.print ("Starting...\n");
     rbc();
     Serial.print ("RBC initialized\n");
-    auto& batt = rbc().battery();
-    batt.setCoef(9.0);
+    // auto& batt = rbc().battery();
+    // batt.setCoef(9.0);
+    servo0.attach(27);
+    servo0.write(position_servo0);
+    servo1.attach(26);
+    servo1.write(position_servo1);
+    servo2.attach(4);
+    servo2.write(position_servo2);
+    servo3.attach(32);
+    servo3.write(position_servo3);
 
  
     rbc().leds().blue( true );  // zapne modrou LED - tim zapne i Odrive 
@@ -134,16 +142,8 @@ void setup() {
     // void speed( int axis, float speed ); // pro osu axis nastavi rychlost speed v ticich za sekundu
     // void setAccel( float accel );  // nastavi zrychleni pro dalsi pohyb
 
-    servo0.attach(27);
-    servo0.write(position_servo0);
-    servo1.attach(26);
-    servo1.write(position_servo1);
-    servo2.attach(4);
-    servo2.write(position_servo2);
-    servo3.attach(32);
-    servo3.write(position_servo3);
+
     // delay(500);
-    // servo3.write(position_servo3-5);
        send_data.restart();
 }
 void arm();
@@ -168,8 +168,8 @@ void loop() {
     //     axis_0 = axis_0*axis_0*axis_0;
     //     float axis_1 = (abs(axis[1]) < 10) ? 0 : axis[1] /128.0; 
     //     axis_1 = axis_1*axis_1*axis_1;
-    //     int levy_m = (axis_1- (axis_0 /2 )) * speed_coef;
-    //     int pravy_m = (axis_1+ (axis_0 /2 )) * speed_coef;
+    //     int levy_m = -(axis_1- (axis_0 /2 )) * speed_coef;
+    //     int pravy_m = -(axis_1+ (axis_0 /2 )) * speed_coef;
     //     odrive.speed( 0 , levy_m );
     //     odrive.speed( 1 , pravy_m  );
     //     if ( odrive.error() )
