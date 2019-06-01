@@ -4,7 +4,7 @@ b4ecf80f50513622ff73f1b219c4429a63851531
 
    // odriveSerial.begin(115200, SERIAL_8N1, 13, 15);
 
-   
+
 
     // Serial.println("Going up");
     // for (int i = 0; i != 10000; i += 1) {
@@ -23,18 +23,18 @@ b4ecf80f50513622ff73f1b219c4429a63851531
     // configureOdrive( odrive );
 
 
-    
-// Servo servo; 
+
+// Servo servo;
 
 // int servo_open = 100;
 // int servo_close = 180;
-// int position_servo = 100; // pro postupne krokovani serva pro kalibraci 
+// int position_servo = 100; // pro postupne krokovani serva pro kalibraci
 // int power_motor = 192;
-// int otacka = 235; // pocet tiku na otacku 
+// int otacka = 235; // pocet tiku na otacku
 // int ctverec = 250; // pocet tiku na ctverec - Praha
 // int zatoc = 280;  // pocet tiku na zatoceni o 90 stupnu
 // static const uint32_t i2c_freq = 400000;
-// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje 
+// bool L_G_light = false; // pro blikani zelene LED - indikuje, ze deska funguje
 
 
 // Servo servo;
@@ -65,3 +65,28 @@ b4ecf80f50513622ff73f1b219c4429a63851531
     if ( (btn[5]==0) and (btn_last[5]==1) )
         rbc().setMotors().power(OTOCNY_MOTOR, 0)
                          .set();
+
+                         int alfa = 60;
+                         double alfa_rad = 1.04719755119659;
+                         int beta = 30;
+                         double beta_rad = 0.52359877559829;
+                         int gama = 90;
+                         double gama_rad = 1.57079632679489;
+                         float arm1 = 120.00;         //v mm
+                         float arm2 = 80.00;          //v mm
+                         float prepona_arm = 143.00;  //v mm
+                         float delka_arm = 70.00;     //v mm
+                         float vyska_arm = 120.00;    //v mm
+                         float max_arm = arm1 + arm2;
+                         float min_arm = 0.00;
+
+
+
+
+predek robota u ruky
+*  dopredu do zadu osa 2
+*  plava leve osa 0
+*  4/5 stedovy motor
+*  osa 6 servo 0
+*  osa 3 servo 1    3- k zemi
+  Y servo 2 k zemi
