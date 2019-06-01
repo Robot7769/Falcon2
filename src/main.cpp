@@ -80,6 +80,16 @@ void setup() {
     servo3.attach(32);
     servo3.write(position_servo3);
 
+    rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
+                     .set();
+    delay(200);
+    rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
+                     .set();
+    delay(200);
+    rbc().setMotors().power(OTOCNY_MOTOR, 0)
+                     .set();
+    delay(200);
+
 
     rbc().leds().blue( true );  // zapne modrou LED - tim zapne i Odrive
     pinMode(GPIO_NUM_21,OUTPUT );
@@ -345,39 +355,47 @@ void arm()
 
 
     if (btn[3]==1) {
-      if((position_servo3 < SERVOMAX) and(position_servo3 > SERVOMIN)){
+      if((position_servo2 < SERVOMAX) &&(position_servo2 >= SERVOMIN)){
         position_servo2++;
       }
     }
     else if (btn[0]==1) {
-      if((position_servo3 < SERVOMAX) and(position_servo3 > SERVOMIN)){
+      if((position_servo2 <= SERVOMAX) &&(position_servo2 > SERVOMIN)){
         position_servo2--;
       }
     }
 
     if (btn[2]==1) {
-      if((position_servo3 < SERVOMAX) and (position_servo3 > SERVOMIN)){
+      if((position_servo3 <= SERVOMAX) && (position_servo3 > SERVOMIN)){
         position_servo3--;
       }
     }
     else if (btn[1]==1) {
-      if((position_servo3 < SERVOMAX) and (position_servo3 > SERVOMIN)){
+      if((position_servo3 < SERVOMAX) && (position_servo3 >= SERVOMIN)){
         position_servo3++;
       }
     }
 
     if (axis[6]<-15) {
-      position_servo0++;
+      if((position_servo0 < SERVOMAX) && (position_servo0 >= SERVOMIN)){
+        position_servo0++;
+      }
     }
     else if (axis[6]>15) {
-      position_servo0--;
+      if((position_servo0 <= SERVOMAX) && (position_servo0 > SERVOMIN)){
+        position_servo0--;
+      }
     }
 
     if (axis[3]<-15) {
-      position_servo1++;
+      if((position_servo1 < SERVOMAX) && (position_servo1 >= SERVOMIN)){
+        position_servo1++;
+      }
     }
     else if (axis[3]>15) {
-      position_servo1--;
+      if((position_servo1 <= SERVOMAX) && (position_servo1 > SERVOMIN)){
+        position_servo1--;
+      }
     }
 
     if (btn_changed[4]) {
@@ -388,7 +406,7 @@ void arm()
         rbc().setMotors().power(OTOCNY_MOTOR, 0)
                          .set();
       }
-      btn_changed[6] = 0;
+      btn_changed[4] = 0;
     }
     if (btn_changed[5]) {
       if (btn[5]) {
