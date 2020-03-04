@@ -80,15 +80,15 @@ void setup() {
     servo3.attach(32);
     servo3.write(position_servo3);
 
-    rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
-                     .set();
-    delay(200);
-    rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
-                     .set();
-    delay(200);
-    rbc().setMotors().power(OTOCNY_MOTOR, 0)
-                     .set();
-    delay(200);
+    // rbc().setMotors().power(OTOCNY_MOTOR, -motor_power)
+    //                  .set();
+    // delay(200);
+    // rbc().setMotors().power(OTOCNY_MOTOR, motor_power)
+    //                  .set();
+    // delay(200);
+    // rbc().setMotors().power(OTOCNY_MOTOR, 0)
+    //                  .set();
+    // delay(200);
 
 
     rbc().leds().blue( true );  // zapne modrou LED - tim zapne i Odrive
@@ -119,17 +119,17 @@ void setup() {
     Serial.println( "Turned on" );
     delay( 500 );
 
-        odrive.move( 0, 0, max_speed ); // dojeď s osou 0 na pozici 0 rychlostí max_speed tiků na otáčku
-        odrive.move( 1, 0, max_speed );
-        delay( 4000 );
-
-        odrive.move( 0, otocka_kola / 2, max_speed );
-        odrive.move( 1, otocka_kola / 2, max_speed );
-        delay( 1000 );
-
-        odrive.move( 0, 0, max_speed );
-        odrive.move( 1, 0, max_speed );
-        delay( 1000 );
+        // odrive.move( 0, 0, max_speed ); // dojeď s osou 0 na pozici 0 rychlostí max_speed tiků na otáčku
+        // odrive.move( 1, 0, max_speed );
+        // delay( 4000 );
+        //
+        // odrive.move( 0, otocka_kola / 2, max_speed );
+        // odrive.move( 1, otocka_kola / 2, max_speed );
+        // delay( 1000 );
+        //
+        // odrive.move( 0, 0, max_speed );
+        // odrive.move( 1, 0, max_speed );
+        // delay( 1000 );
 
         if ( odrive.error() )
             odrive.dumpErrors();
